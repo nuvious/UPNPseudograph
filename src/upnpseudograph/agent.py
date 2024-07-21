@@ -168,7 +168,8 @@ class UPNPAgent:
                                     if ip in self.agents:
                                         try:
                                             message = secret_pixel.extract_bytes(content, self.private_key)
-                                            self.process_message(ip, message)
+                                            if message:
+                                                self.process_message(ip, message)
                                         except Exception as e:
                                             log.error("2Error %s reading message from  agent %s", e, ip)
                                 except requests.HTTPError as e:

@@ -252,7 +252,7 @@ def extract_bytes(image_bytes, private_key=None):
         else:
             return data_to_decode
     except Exception as e:
-        log.error("Exceptiong %s encountered extracting bytes.", e, exc_info=sys.exc_info())
+        log.debug("Exceptiong %s encountered extracting bytes.", e, exc_info=sys.exc_info())
         return None
 
 if __name__ == '__main__':
