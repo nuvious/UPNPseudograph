@@ -2,10 +2,15 @@
 *.xml
 encoded.png
 
-# Pythong
+# Python
 .venv
 venv
 __pycache__
+*.egg-info
 
 # Working code
 scratch
+
+# Keys
+*.key
+*.pub

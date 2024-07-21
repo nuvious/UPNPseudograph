@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools"] 
+build-backend = "setuptools.build_meta" 
+
+
+[project]
+name = "upnpseudograph" 
+version = "0.0.0" 
+description = "A covert channel that clones UPNP devices and encodes messages in the icon list images."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+keywords = ["sample", "setuptools", "development"]
+authors = [
+  {name = "David Cheeseman", email = "5287736+nuvious@users.noreply.github.com" }
+]
+maintainers = [
+  {name = "David Cheeseman", email = "5287736+nuvious@users.noreply.github.com" }
+]
+dependencies = [
+    "cryptography>=42.0.2,<43",
+    "Pillow>=9.0.1,<10",
+    "numpy>=1.21.6,<2",
+    "xmltodict>=0.13.0,<1",
+    "requests>=2.32.3,<3",
+    "Flask>=3.0.3,<4",
+    "websockets>=12.0,<13",
+    "flask-sock>=0.7.0,<1"
+]
+
+
+classifiers = [ 
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/nvuious/UPNPseudograph"
+"Bug Reports" = "https://github.com/nvuious/UPNPseudograph/issues"
+"Source" = "https://github.com/nvuious/UPNPseudograph"
+
+[project.scripts]
+upnpseudograph = "upnpseudograph.__main__:main"

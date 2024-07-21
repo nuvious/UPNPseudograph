@@ -10,7 +10,6 @@ import sys
 import threading
 import time
 import typing
-import utils
 
 import requests
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -20,8 +19,9 @@ import websockets
 import xmltodict
 import zlib
 
-import secret_pixel
-import ssdp
+from upnpseudograph import secret_pixel
+from upnpseudograph import ssdp
+from upnpseudograph import utils
 
 
 log = logging.getLogger(__name__)

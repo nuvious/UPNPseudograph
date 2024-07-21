@@ -1,5 +1,6 @@
 """A set of utility functions for encryption and network operations.
 """
+import inspect
 import io
 import json
 import logging
@@ -16,7 +17,7 @@ import PIL
 import requests
 import websockets
 
-import secret_pixel
+from upnpseudograph import secret_pixel
 
 log = logging.getLogger(__name__)
 
@@ -269,5 +270,20 @@ def load_compact_key(n_bytes: bytes):
     return rsa.RSAPublicNumbers(_PUBLIC_EXPONENT, n).public_key()
 
 
+def find_subclasses(cls):
+    return set(cls.__subclasses__()).union(
+        [s for c in cls.__subclasses__() for s in find_subclasses(c)])
+
+
+def instantiate_class(class_path):
+    import importlib
+    split = class_path.split('.')
+    module_name = '.'.join(split[:-1])
+    class_name = split[-1]
+    module = importlib.import_module(module_name)
+    _class = getattr(module, class_name)
+    return _class
+
 if __name__ == "__main__":
-    print(get_ssdp_devices())
+    from upnpseudograph.upnp import UPNPDevice
+    print(find_subclasses(UPNPDevice))
