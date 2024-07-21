@@ -162,7 +162,7 @@ class UPNPAgent:
                                         if n_bytes and len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
                                             public_key = utils.public_key_from_n(n_bytes)
                                             self.agents[ip] = public_key
-                                            log.info("Found agent at %s.", ip)                         
+                                            print("Found agent at %s.", ip)                         
                                     except Exception as e:
                                         log.error("1Error %s reading message from %s", e, ip)
                                     if ip in self.agents:
