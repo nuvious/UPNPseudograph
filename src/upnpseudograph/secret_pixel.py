@@ -1,6 +1,9 @@
 import io
+import logging
 import os
 import random
+import sys
+
 from PIL import Image
 import numpy as np
 from cryptography.hazmat.primitives.padding import PKCS7
@@ -27,6 +30,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+log = logging.getLogger(__name__)
 
 def encrypt_data(data, public_key):
     # Generate a random session key
@@ -247,7 +251,8 @@ def extract_bytes(image_bytes, private_key=None):
             return decrypted_data
         else:
             return data_to_decode
-    except:
+    except Exception as e:
+        log.error("Exceptiong %s encountered extracting bytes.", e, exc_info=sys.exc_info())
         return None
 
 if __name__ == '__main__':
