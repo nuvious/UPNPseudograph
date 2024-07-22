@@ -441,8 +441,8 @@ class RokuDevice(UPNPDevice):
                 producer_task = asyncio.ensure_future(produce_ws(ws, target_ws))
                 _, pending = await asyncio.wait(
                     [consumer_task, producer_task],
-                    return_when=asyncio.FIRST_COMPLETED,
+                    return_when=asyncio.ALL_COMPLETED,
                 )
 
                 for task in pending:
-                    await task.cancel()
+                    task.cancel()
