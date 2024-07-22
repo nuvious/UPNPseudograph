@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 _HOST_IP_ADDRESS = None
 GLOBAL_BYTE_ORDER = 'big'
 _PUBLIC_EXPONENT = 0x10001
-RSA_BIT_STRENGTH = 1024
+RSA_BIT_STRENGTH = 2048
 IP_PATTERN = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
 
 
