@@ -121,11 +121,12 @@ class UPNPAgent:
             print(f"Recevied file from {agent_ip}: {file_name}")
         elif command == ord('g'):
             try:
-                file_name = os.path.basename(message_content.decode('utf8')).encode('utf8')
+                full_path = message_content.decode('utf8')
+                file_name = os.path.basename(full_path).encode('utf8')
                 filename_length = len(file_name).to_bytes(4, byteorder='big')
-                with open(file_name, 'rb') as f:
+                with open(full_path, 'rb') as f:
                     content = f.read()
-                    self.queue_message(agent_ip, b'f', filename_length + content)
+                    self.queue_message(agent_ip, b'f', filename_length + file_name + content)
             except Exception as e:
                 self.queue_message(
                     agent_ip, 
