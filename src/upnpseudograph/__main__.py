@@ -39,7 +39,7 @@ def main():
             print("""
             Control Panel:
                 m:[MESSAGE] - Send a message
-                c:[COMMAND] - Execute a command
+                c:[COMMAND] - Execute a command (c2 only)
                 l - List agents
                 q - quit
             """)
@@ -49,6 +49,9 @@ def main():
             elif command_input == 'q':
                 os._exit(0)
             elif command_input.startswith('m') or command_input.startswith('c'):
+                if not args.is_c2 and command_input.startswith('c'):
+                    print("C2 only command.")
+                    continue
                 if command_input[1] != ':':
                     print("Malformed command.")
                     continue
