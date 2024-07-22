@@ -142,7 +142,7 @@ def filter_icon_list(
         if icon_path and isinstance(icon_path, str):
             try:
                 icon_url = location + icon_path
-                print(f"Fetching icon {icon_url}")
+                log.debug(f"Fetching icon %s", icon_url)
                 response = requests.get(icon_url, timeout=10)
                 response.raise_for_status()
                 # Try opening it with Pillow to ensure we can use it

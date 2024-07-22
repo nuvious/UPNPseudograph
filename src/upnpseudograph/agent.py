@@ -102,6 +102,8 @@ class UPNPAgent:
                 (target_ip, public_key, message_bytes)
             )
             self.agent_messages[target_ip] = message_mapping
+            return True
+        return False
 
     def process_message(self, agent_ip: str, message: bytes):
         print(message)
@@ -133,9 +135,13 @@ class UPNPAgent:
                     try:
                         location = service.get('location')
                         ip, port = utils.extract_ip_port(location)
+                        log.debug(f"Insepcting device at ip %s.", ip)
                         if location:
-                            response = requests.get(location, timeout=10)
-                            response.raise_for_status()
+                            try:
+                                response = requests.get(location, timeout=10)
+                                response.raise_for_status()
+                            except:
+                                continue
                             xml_dict = xmltodict.parse(response.text)
                             icons = xml_dict.get(
                                 'root', {}
@@ -162,7 +168,7 @@ class UPNPAgent:
                                         if n_bytes and len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
                                             public_key = utils.public_key_from_n(n_bytes)
                                             self.agents[ip] = public_key
-                                            print("Found agent at %s.", ip)                         
+                                            log.debug(f"Found agent at %s.", ip)                     
                                     except Exception as e:
                                         log.error("1Error %s reading message from %s", e, ip)
                                     if ip in self.agents:
@@ -173,9 +179,9 @@ class UPNPAgent:
                                         except Exception as e:
                                             log.error("2Error %s reading message from  agent %s", e, ip)
                                 except requests.HTTPError as e:
-                                    log.info("Failed to get %s, skipping: %s", icon_full_path, e)
+                                    log.erro("Failed to get %s, skipping: %s", icon_full_path, e)
                                 except Exception as e: # pylint: disable=W0718
-                                    log.info("No message found in %s, skipping: %s", icon_full_path, e)
+                                    log.error("No message found in %s from %s, skipping: %s", icon_full_path, ip, e)
                     except requests.HTTPError:
                         pass
             time.sleep(SEARCH_FREQUENCY)

@@ -1,8 +1,13 @@
 import argparse
 import logging
 import os
+import time
 
 from upnpseudograph import utils, upnp, agent
+
+def list_agents(spoofed_device):
+    for i, ip in enumerate(spoofed_device.agents):
+        print(i, ip)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -27,13 +32,47 @@ def main():
         is_c2=args.is_c2
     )
     try:
+        print("Searching for agents...")
+        while len(spoofed_device.agents) < 1:
+            time.sleep(0.5)
         while True:
             print("""
             Control Panel:
                 m:[MESSAGE] - Send a message
                 c:[COMMAND] - Execute a command
+                l - List agents
+                q - quit
             """)
             command_input = input("Enter command:")
+            if command_input == 'l':
+                list_agents(spoofed_device)
+            elif command_input == 'q':
+                os._exit(0)
+            elif command_input.startswith('m') or command_input.startswith('c'):
+                if command_input[1] != ':':
+                    print("Malformed command.")
+                    continue
+                list_agents(spoofed_device)
+                agent_ip = None
+                while not agent_ip:
+                    try:
+                        agent_index = int(input("Select agent to send to or type c to cancel:"))
+                        if agent_index == 'c':
+                            break
+                        elif agent_index < len(spoofed_device.agents):
+                            agent_ip = list(spoofed_device.agents.keys())[agent_index]
+                    except:
+                        raise
+                if agent_ip:
+                    command = command_input[0].encode('utf8')
+                    content = command_input[2:].encode('utf8')
+                    queued = spoofed_device.queue_message(agent_ip, command, content)
+                    if queued:
+                        print(f"Message queued for {agent_ip}")
+                    else:
+                        print("Failed to queue message.")
+            else:
+                print("Malformed command.")
 
     except KeyboardInterrupt:
         os._exit(0)

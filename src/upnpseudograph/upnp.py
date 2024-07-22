@@ -249,16 +249,19 @@ class UPNPDevice:
             message = utils.get_compact_key(self.public_key)
             public_key = None
             self.has_key_list.append(request_ip)
+            print(f"Sent initial key to {request_ip}.")
         # If we get here, we know the ip has our public key so see if there's a
         # message or not in the queue
         elif message_queue and not message_queue.empty():
             _, public_key, message = self.message_queue.get()
+            print(f"Sending message {message} to {request_ip}")
             if len(message) > self.max_size:
                 self.oversized_queue.put((request_ip, zlib.decompress(message)))
                 message = None
                 public_key = None
         else:
             # As a default, just set the message to a public key
+            print(f"Defaulting to sending key to {request_ip}")
             message = utils.get_compact_key(self.public_key)
             public_key = None
 

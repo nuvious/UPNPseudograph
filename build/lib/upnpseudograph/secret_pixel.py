@@ -98,7 +98,7 @@ def encode_bytes(image_bytes, data, public_key=None):
     # Read the original image
     img = Image.open(io.BytesIO(image_bytes))
     width, height = img.size
-    print(f"Attempting to embed {len(data)} bytes.")
+    log.debug("Attempting to embed %d bytes.", len(data))
 
     seed = width + height
     prng = random.Random(seed)  # Create a new instance of a random number generator
