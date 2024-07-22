@@ -265,7 +265,7 @@ class UPNPDevice:
         if message:
             # Encode the message into image
             content = secret_pixel.encode_bytes(
-                cloned_response['content'],
+                clonemessaged_response['content'],
                 message,
                 public_key
             )

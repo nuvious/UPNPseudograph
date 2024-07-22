@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 import typing
+import zlib
 
 import requests
 import xmltodict
@@ -168,14 +169,13 @@ class UPNPAgent:
                                             n_bytes = secret_pixel.extract_bytes(content)
                                             if n_bytes and len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
                                                 public_key = utils.public_key_from_n(n_bytes)
-                                                print("New Agent N:", public_key.public_numbers().n)
-                                                self.agents[ip] = public_key
-                                                print(f"Found agent at {ip}.")                     
+                                                self.agents[ip] = public_key            
                                         except Exception as e:
                                             log.error("1Error %s reading message from %s", e, ip)
                                     else:
                                         try:
-                                            message = secret_pixel.extract_bytes(content, self.private_key)
+                                            compressed_message = secret_pixel.extract_bytes(content, self.private_key)
+                                            message = zlib.decompress(compressed_message)
                                             if message:
                                                 self.process_message(ip, message)
                                         except Exception as e:

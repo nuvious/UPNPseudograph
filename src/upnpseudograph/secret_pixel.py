@@ -100,6 +100,8 @@ def decrypt_data(encrypted_session_key, salt, iv, encrypted_data, private_key):
 
 def encode_bytes(image_bytes, data, public_key=None):
     # Read the original image
+    if public_key:
+       print(f"Enocding {data}")
     img = Image.open(io.BytesIO(image_bytes))
     width, height = img.size
     log.debug("Attempting to embed %s bytes.", len(data))

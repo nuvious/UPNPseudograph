@@ -12,6 +12,5 @@ build
 # Working code
 scratch
 
-# Keys
-*.key
-*.pub
+# Debug files
+message_history.txt
