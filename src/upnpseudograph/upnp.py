@@ -99,8 +99,7 @@ class UPNPDevice:
         def _monitor_queue():
             while True:
                 if not self.message_queue.empty():
-                    ip, public_key, message = self.message_queue.get()
-                    print(f"Queing {message} for {ip}.")
+                    ip, public_key, message = self.message_queue.get()=
                     # Don't need to lock because we only have a single thread and
                     # modifying one message at a time
                     message_queue = self.message_queues.get(ip, queue.Queue())
@@ -224,7 +223,7 @@ class UPNPDevice:
 
             @app.route('/', defaults={'path': ''})
             @app.route('/<path:path>')
-            def catch_all(path):
+            def catch_all(path):=
                 response = self.handle_path(path)
                 logging.info(
                     "Flask returning response for %s - %d",
@@ -248,6 +247,10 @@ class UPNPDevice:
     def generate_message(self, request_ip, cloned_response):
         # We're talking to an agent
         message_queue: queue.Queue = self.message_queues.get(request_ip)
+        if not message_queue:
+            print(f"Missing message queue for {request_ip}")
+        else:
+            print(f"Retreived message queue for {request_ip}")
         # Ensure the request_ip has received at least one message with the key
         if request_ip not in self.has_key_list:
             message = utils.get_compact_key(self.public_key)
@@ -303,6 +306,7 @@ class UPNPDevice:
             full_path = path + "?" + "&".join(args)
         log.debug("Handling full path %s", full_path)
         cloned_response = self.target_icons.get(full_path)
+        print("Handling Full path: ", full_path)
         if cloned_response:
             is_icon_request = True
         if not cloned_response:

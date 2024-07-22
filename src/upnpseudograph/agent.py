@@ -162,16 +162,17 @@ class UPNPAgent:
                                         icon_full_path, timeout=10)
                                     icon_response.raise_for_status()
                                     content = icon_response.content
-                                    try:
-                                        # See if it's a new agent
-                                        n_bytes = secret_pixel.extract_bytes(content)
-                                        if n_bytes and len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
-                                            public_key = utils.public_key_from_n(n_bytes)
-                                            self.agents[ip] = public_key
-                                            log.debug(f"Found agent at %s.", ip)                     
-                                    except Exception as e:
-                                        log.error("1Error %s reading message from %s", e, ip)
-                                    if ip in self.agents:
+                                    if ip not in self.agents:
+                                        try:
+                                            # See if it's a new agent
+                                            n_bytes = secret_pixel.extract_bytes(content)
+                                            if n_bytes and len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
+                                                public_key = utils.public_key_from_n(n_bytes)
+                                                self.agents[ip] = public_key
+                                                log.debug(f"Found agent at %s.", ip)                     
+                                        except Exception as e:
+                                            log.error("1Error %s reading message from %s", e, ip)
+                                    else:
                                         try:
                                             message = secret_pixel.extract_bytes(content, self.private_key)
                                             if message:
