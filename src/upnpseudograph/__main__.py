@@ -72,7 +72,8 @@ Control Panel:
                     command = command_input[0].encode('utf8')
                     content = command_input[2:].encode('utf8')
                     if command_input[0] == 'f':
-                        file_name_length = len(content).to_bytes(4, byteorder='big')
+                        file_name = os.path.basename(command_input[2:]).encode('utf8')
+                        file_name_length = len(file_name).to_bytes(4, byteorder='big')
                         content = file_name_length + content
                     queued = spoofed_device.queue_message(agent_ip, command, content)
                     if queued:
