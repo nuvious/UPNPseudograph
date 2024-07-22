@@ -83,7 +83,7 @@ class UPNPDevice:
         else:
             raise Exception("No matching UPNP devices")  # pylint: disable=W0719
         icon_benchmarks = utils.benchmark_icons(
-            self.public_key,.get
+            self.public_key,
             self.target_icons
         )
         # Set max message size and raise an error if no image can encode the
