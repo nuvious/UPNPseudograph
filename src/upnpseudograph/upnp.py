@@ -257,7 +257,7 @@ class UPNPDevice:
         # If we get here, we know the ip has our public key so see if there's a
         # message or not in the queue
         elif message_queue and not message_queue.empty():
-            public_key, message = self.message_queue.get()
+            _, public_key, message = self.message_queue.get()
             print(f"Sending message {message} to {request_ip}")
             if len(message) > self.max_size:
                 self.oversized_queue.put((request_ip, zlib.decompress(message)))

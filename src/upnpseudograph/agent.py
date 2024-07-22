@@ -179,7 +179,7 @@ class UPNPAgent:
                                         except Exception as e:
                                             log.error("2Error %s reading message from  agent %s", e, ip)
                                 except requests.HTTPError as e:
-                                    log.erro("Failed to get %s, skipping: %s", icon_full_path, e)
+                                    log.error("Failed to get %s, skipping: %s", icon_full_path, e)
                                 except Exception as e: # pylint: disable=W0718
                                     log.error("No message found in %s from %s, skipping: %s", icon_full_path, ip, e)
                     except requests.HTTPError:
