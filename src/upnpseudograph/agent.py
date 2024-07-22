@@ -126,8 +126,15 @@ class UPNPAgent:
                 with open(file_name, 'rb') as f:
                     content = f.read()
                     self.queue_message(agent_ip, b'f', filename_length + content)
-            except:
-                self.queue_message(agent_ip, b'm', b'Failed to get ' + message_content)
+            except Exception as e:
+                self.queue_message(
+                    agent_ip, 
+                    b'm', 
+                    b'Failed to get ' +
+                        message_content +
+                        b'\n' +
+                        str(e).encode('utf8')
+                )
         if not self.is_c2:
             if command == ord('c'):
                 print("\nReceived C2 Command ", message_content.decode('utf8'))

