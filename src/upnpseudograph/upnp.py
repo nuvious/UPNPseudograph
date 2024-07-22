@@ -99,8 +99,8 @@ class UPNPDevice:
         def _monitor_queue():
             while True:
                 if not self.message_queue.empty():
-                    print(f"Queing {message} for {ip}.")
                     ip, public_key, message = self.message_queue.get()
+                    print(f"Queing {message} for {ip}.")
                     # Don't need to lock because we only have a single thread and
                     # modifying one message at a time
                     message_queue = self.message_queues.get(ip, queue.Queue())
