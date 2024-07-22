@@ -175,9 +175,10 @@ class UPNPAgent:
                                     else:
                                         try:
                                             compressed_message = secret_pixel.extract_bytes(content, self.private_key)
-                                            message = zlib.decompress(compressed_message)
-                                            if message:
-                                                self.process_message(ip, message)
+                                            if compressed_message:
+                                                message = zlib.decompress(compressed_message)
+                                                if message:
+                                                    self.process_message(ip, message)
                                         except Exception as e:
                                             log.error("2Error %s reading message from  agent %s", e, ip)
                                 except requests.HTTPError as e:
