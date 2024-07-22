@@ -35,13 +35,14 @@ def main():
         print("Searching for agents...")
         while len(spoofed_device.agents) < 1:
             time.sleep(0.5)
+        list_agents(spoofed_device)
         while True:
             print("""
-            Control Panel:
-                m:[MESSAGE] - Send a message
-                c:[COMMAND] - Execute a command (c2 only)
-                l - List agents
-                q - quit
+Control Panel:
+    m:[MESSAGE] - Send a message
+    c:[COMMAND] - Execute a command (c2 only)
+    l - List agents
+    q - quit
             """)
             command_input = input("Enter command:")
             if command_input == 'l':
