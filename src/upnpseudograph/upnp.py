@@ -83,7 +83,7 @@ class UPNPDevice:
         else:
             raise Exception("No matching UPNP devices")  # pylint: disable=W0719
         icon_benchmarks = utils.benchmark_icons(
-            self.public_key,
+            self.public_key,.get
             self.target_icons
         )
         # Set max message size and raise an error if no image can encode the
@@ -130,15 +130,11 @@ class UPNPDevice:
         OverflowError
             Raised if the total message size can't be encoded in the available icons
         """
-        capacities = [icon.get('_capacity') for icon in self.target_icons]
-        parts = []
-        for c in capacities:
-            parts = parts + [message[:c]]
-            message = message[c:]
-        if len(message) > 0:
+        capacity = self.target_icons[0].get('_capacity')
+        if len(message) > capacity:
             raise OverflowError("Message too big to be encoded.")
         message_queue : queue.Queue = self.message_queues.get(ip, queue.Queue())
-        message_queue.put((public_key, parts))
+        message_queue.put((public_key, message))
         self.message_queues[ip] = message_queue
 
 
@@ -256,7 +252,7 @@ class UPNPDevice:
         # If we get here, we know the ip has our public key so see if there's a
         # message or not in the queue
         elif message_queue and not message_queue.empty():
-            _, public_key, message = message_queue.get()
+            public_key, message = message_queue.get()
             print(f"Sending message {message} to {request_ip}")
             if len(message) > self.max_size:
                 self.oversized_queue.put((request_ip, zlib.decompress(message)))
