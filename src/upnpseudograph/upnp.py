@@ -216,7 +216,7 @@ class UPNPDevice:
         def _start_flask():
             app = Flask(__name__)
 
-            logging.getLogger('werkzeug').setLevel(logging.ERROR)
+            logging.getLogger('werkzeug').setLevel(logging.INFO)
 
 
             self.add_custom_routes(app)
@@ -247,10 +247,6 @@ class UPNPDevice:
     def generate_message(self, request_ip, cloned_response):
         # We're talking to an agent
         message_queue: queue.Queue = self.message_queues.get(request_ip)
-        if not message_queue:
-            print(f"Missing message queue for {request_ip}")
-        else:
-            print(f"Retreived message queue for {request_ip}")
         # Ensure the request_ip has received at least one message with the key
         if request_ip not in self.has_key_list:
             message = utils.get_compact_key(self.public_key)
@@ -260,7 +256,7 @@ class UPNPDevice:
         # If we get here, we know the ip has our public key so see if there's a
         # message or not in the queue
         elif message_queue and not message_queue.empty():
-            _, public_key, message = self.message_queue.get()
+            _, public_key, message = message_queue.get()
             print(f"Sending message {message} to {request_ip}")
             if len(message) > self.max_size:
                 self.oversized_queue.put((request_ip, zlib.decompress(message)))
@@ -306,7 +302,6 @@ class UPNPDevice:
             full_path = path + "?" + "&".join(args)
         log.debug("Handling full path %s", full_path)
         cloned_response = self.target_icons.get(full_path)
-        print("Handling Full path: ", full_path)
         if cloned_response:
             is_icon_request = True
         if not cloned_response:
