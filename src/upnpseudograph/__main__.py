@@ -31,6 +31,7 @@ def main():
         passthrough=not args.disable_passthrough,
         is_c2=args.is_c2
     )
+    print("My N:", spoofed_device.private_key.public_key().public_numbers().n)
     try:
         print("Searching for agents...")
         while len(spoofed_device.agents) < 1:

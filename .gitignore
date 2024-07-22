@@ -7,6 +7,7 @@ encoded.png
 venv
 __pycache__
 *.egg-info
+build
 
 # Working code
 scratch
