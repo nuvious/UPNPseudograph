@@ -216,7 +216,7 @@ class UPNPDevice:
         def _start_flask():
             app = Flask(__name__)
 
-            logging.getLogger('werkzeug').setLevel(logging.INFO)
+            logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
 
             self.add_custom_routes(app)
