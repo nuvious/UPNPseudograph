@@ -56,6 +56,7 @@ class UPNPAgent:
         self.private_key = utils.generate_rsa()
         self.public_key = self.private_key.public_key()
         self.target_device = None
+        self.message_queue = queue.Queue()
         self.oversized_queue = queue.Queue()
         self.host_ip = utils.get_host_ip_address()
         self.agents = {}
@@ -89,7 +90,6 @@ class UPNPAgent:
         """
         public_key = self.agents.get(target_ip)
         if public_key:
-            message_queue = self.target_device.message_queues.get(target_ip, queue.Queue())
             message_mapping = self.agent_messages.get(target_ip,{})
             message_index = len(message_mapping)
             message_bytes = (
@@ -98,10 +98,9 @@ class UPNPAgent:
             message_mapping[message_index] = {
                 'message': message_bytes,
             }
-            message_queue.put(
-                (public_key, message_bytes)
+            self.message_queue.put(
+                (target_ip, public_key, message_bytes)
             )
-            self.target_device.message_queues[target_ip] = message_queue
             self.agent_messages[target_ip] = message_mapping
             return True
         return False
