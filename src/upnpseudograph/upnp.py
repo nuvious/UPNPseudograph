@@ -445,4 +445,4 @@ class RokuDevice(UPNPDevice):
                 )
 
                 for task in pending:
-                    task.cancel()
+                    await task.cancel()
