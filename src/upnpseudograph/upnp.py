@@ -99,7 +99,7 @@ class UPNPDevice:
         def _monitor_queue():
             while True:
                 if not self.message_queue.empty():
-                    ip, public_key, message = self.message_queue.get()=
+                    ip, public_key, message = self.message_queue.get()
                     # Don't need to lock because we only have a single thread and
                     # modifying one message at a time
                     message_queue = self.message_queues.get(ip, queue.Queue())
@@ -223,7 +223,7 @@ class UPNPDevice:
 
             @app.route('/', defaults={'path': ''})
             @app.route('/<path:path>')
-            def catch_all(path):=
+            def catch_all(path):
                 response = self.handle_path(path)
                 logging.info(
                     "Flask returning response for %s - %d",
