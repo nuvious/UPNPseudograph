@@ -1,4 +1,10 @@
-# UPNPsuedographia
+# UPNPseudograph
+
+A detailed overview is available in a whitepapaer in [markdown](Whitepaper.md) and [pdf](Whitepaper.pdf) formats.
+
+## Demonstration
+
+[![UPNPseudograph](https://img.youtube.com/vi/BKqg3oSyqzU/0.jpg)](https://www.youtube.com/watch?v=BKqg3oSyqzU)
 
 ## Dependencies
 
@@ -6,7 +12,6 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/nuvious/UPNPseudograph.git
-cd UPNPseudograph
 ```
 
 This project uses Pillow which requires external libraries:
@@ -27,7 +32,7 @@ sudo apt-get install -y \
 You can then install the python requirements:
 
 ```bash
-pip install .
+pip install UPNPseudograph
 ```
 
 ## Usage
@@ -59,6 +64,25 @@ to interact with. It will receive messages and commands from the C2.
 upnpseudograph --preferred-device=upnpseudograph.upnp.RokuDevice
 ```
 
+### Interacting with Agent
+
+After a device is cloned you will receive a prompt to interact with other agents:
+
+```bash
+Control Panel:
+    m:[MESSAGE] - Send a message
+    f:[FILE_PATH] - Send file
+    g:[FILE_PATH] - Gets a file from an agent (c2 only)
+    c:[COMMAND] - Execute a command (c2 only)
+    l - List agents
+    q - quit
+            
+Enter command:m:hello
+0 192.168.1.42
+Select agent to send to or type c to cancel:0
+Message queued for 192.168.1.42
+```
+
 ### Other Arguments
 
 There are other arguments you can pass in depending on preference:
@@ -67,7 +91,6 @@ There are other arguments you can pass in depending on preference:
 |-|-|
 |--disable-passthrough|By default passthrough is enabled forwarding all requests to the cloned device to the actual device to help minimize an unintentional denial of service. This flag disables that functionality.|
 |--search-frequency|Sets the number of seconds to search for other agents. Default is 30 seconds.|
-
 
 # References
 
