@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 _HOST_IP_ADDRESS = None
 GLOBAL_BYTE_ORDER = 'big'
 _PUBLIC_EXPONENT = 0x10001
-RSA_BIT_STRENGTH = 2048
+RSA_BIT_STRENGTH = 4096
 IP_PATTERN = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
 
 
@@ -242,7 +242,7 @@ def get_compact_key(key: rsa.RSAPrivateKey | rsa.RSAPublicKey):
         public_numbers = key.public_key().public_numbers()
     else:
         public_numbers = key.public_numbers()
-    return public_numbers.n.to_bytes(2048//8, byteorder=GLOBAL_BYTE_ORDER)
+    return public_numbers.n.to_bytes(RSA_BIT_STRENGTH//8, byteorder=GLOBAL_BYTE_ORDER)
 
 
 def public_key_from_n(n_bytes):
