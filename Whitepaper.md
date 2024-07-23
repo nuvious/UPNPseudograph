@@ -14,7 +14,7 @@ UPNP covert channels have been researched in the past. Mohamed et al. implemente
 
 # Overview
 
-UPNP devices usually service requests using HTTP or Websockets. When devices are looking for Universal Plug and Play (UPNP) devices, they use SSDP broadcast messages to request information about devices and/or services. Specifically, a M-SEARCH request with `ssdp:all`, `upnp:rootdevice`, or other service requests is specified in the `ST` field is broadcast with UDP to `239.255.255.250` on port `1900`. An `MX` value is specified in discover requests to specify the number of seconds devices have to respond. Devices then respond directly to the requestor with a Simple Service Discovery Protocol (SSDP) message providing various information. All requests and responses are formatted with HTTP/1.1 [1] [6]. Below is an example of one such response from a Roku device:
+UPNP devices usually service requests using HTTP or Websockets. When devices are looking for Universal Plug and Play (UPNP) devices, they use Simple Service Discovery Protocol (SSDP) broadcast messages to request information about devices and/or services. Specifically, a M-SEARCH request with `ssdp:all`, `upnp:rootdevice`, or other service requests is specified in the `ST` field is broadcast with UDP to `239.255.255.250` on port `1900`. An `MX` value is specified in discover requests to specify the number of seconds devices have to respond. Devices then respond directly to the requestor with a SSDP message providing various information. All requests and responses are formatted with HTTP/1.1 [1] [6]. Below is an example of one such response from a Roku device:
 
 ![SSDP Packet Capture](assets/fig1.png "SSDP Packet Capture")
 
@@ -86,7 +86,7 @@ Above is the image icon as displayed in the Roku app.
 The implementation consisted of four primary components:
 
 - UPNPDevice
-  - A class dedicated to searching for and cloning a UPNP device, acting as a proxy to the original device to mitigate inadvertent DoS. This class also manages key exchange.
+  - A class dedicated to searching for and cloning a UPNP device, acting as a proxy to the original device to mitigate inadvertent denial of service. This class also manages key exchange.
 - UPNPAgent
   - A class that manages the queueing of messages and the execution of commands.
   - Operates in either a C2 or subbordinate mode of operation.
@@ -101,7 +101,7 @@ The implementation consisted of four primary components:
 
 ## Encryption and Steganography
 
-In this implementation, RSA 2048 and 4096 were tested. The key encapsulation used by SecretPixel was PBKDF2HMAC, and the data was encrypted with AES 256 CBC. A seed is constructed using the image dimensions, and the order of LSB embedding is determined by shuffling the indicators of the pixels.
+In this implementation, RSA 2048 and 4096 were tested. The key encapsulation used by SecretPixel was PBKDF2HMAC, and the data was encrypted with AES 256 CBC. A seed is constructed using the image dimensions, and the order of LSB embedding is determined by shuffling the indices of the pixels.
 
 ## Payload Construction
 
@@ -146,7 +146,7 @@ $$P_{max} = WH - (R_{bits} + S_{salt} + S_{iv})  $$
 |$W$|Width of image in pixels.|$S_{salt}$|Salt size in bits.|
 |$H$|Height of image in pixels.|$S_{iv}$|IV size in bits.|
 
-The Roku icon at the time of implementation had dimensions of 360x219 pixels, offering a maximum payload of 76536/74488 or 9567/9311 complete bytes for 2048- and 4096-bit RSA, respectively.
+The Roku icon at the time of implementation had dimensions of 360x219 pixels, offering a maximum payload of 76,536/74,488 or 9,567/9,311 complete bytes for 2048- and 4096-bit RSA, respectively.
 
 Since SSDP broadcast responses are not necessarily received within the `MX` window and because devices tend to poll on intervals ranging between 30 seconds and several minutes (as observed in testing), the payload size is only part of the total bandwidth consideration. Below is a formula that accounts for these variations:
 
@@ -157,11 +157,11 @@ $$ BW = {P_{max} \over I_{discover}P_{response}+{L_{query}}} $$
 |$P_{max}$|Maximum payload size in bits.|$P_{response}$|Probability an agent responds to discovery within the `MX` window.|
 |$I_{discover}$|Interval in seconds for discover requests.|$L_{query}$|Latency between receiving a response and downloading the icon with the embedded payload.|
 
-Assuming a scan interval of 30 seconds and a probability of response of 50%, a covert channel would have a maximum effective bandwidth of 5102/4956 bits per second or 637/620 bytes per second for 2048- and 4096-bit RSA, respectively.
+Assuming a scan interval of 30 seconds and a probability of response of 50%, a covert channel would have a maximum effective bandwidth of 5,102/4,956 bits per second or 637/620 bytes per second for 2048- and 4096-bit RSA, respectively.
 
 # Limitations
 
-Testing with the Roku device passthrough did not disrupt Roku service with a naive proxy. However, more advanced devices may utilize more robust authentication methods, which would make applying this implementation while preventing degradation or denial of service users infeasible. This also depends on SSDP traffic for UPNP devices to be unhindered, and in more secure networks, SSDP may not be allowed, making this technique generally infeasible.
+Testing with the Roku device passthrough did not disrupt Roku service with a naive proxy. However, more advanced devices may utilize more robust authentication methods, which would make applying this implementation while preventing degradation or denial of service to users infeasible. This also depends on SSDP traffic for UPNP devices to be unhindered, and in more secure networks, SSDP may not be allowed, making this technique generally infeasible.
 
 # Covertness
 
@@ -171,7 +171,7 @@ This covert channel could be deployed more covertly if the implementation is onl
 
 # Conclusion
 
-UPNP is ubiquitous, and even if port knocking is disabled, local network traffic still utilizes SSDP for devices to discover other devices and services. In home and small business networks, this can be leveraged to implement a high-bandwidth storage channel in the icons of cloned devices on the network. This technique, while novel, is easily detectable by a passive warden but could still be effective in networks without network security analysis, such as home or small business networks.
+UPNP is ubiquitous, and even if port knocking is disabled, local network traffic still utilizes SSDP for devices to discover other UPNP devices and services. This can be leveraged in networks to implement a high-bandwidth storage channel in the icons of cloned devices on the network. This technique, while novel, is easily detectable by a passive warden but could still be effective in networks without network security controls, such as home or small business networks.
 
 # References
 
