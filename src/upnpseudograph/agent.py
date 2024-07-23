@@ -122,6 +122,7 @@ class UPNPAgent:
         elif command == ord('g'):
             try:
                 full_path = message_content.decode('utf8')
+                print(f"Received get request for {full_path} from {agent_ip}.")
                 file_name = os.path.basename(full_path).encode('utf8')
                 filename_length = len(file_name).to_bytes(4, byteorder='big')
                 with open(full_path, 'rb') as f:

@@ -1,5 +1,7 @@
 # UPNPsuedographia
 
+A detailed overview is available in a whitepapaer in [markdown](Whitepaper.md) and [pdf](Whitepaper.pdf) formats.
+
 ## Dependencies
 
 Clone the repository:
@@ -59,6 +61,25 @@ to interact with. It will receive messages and commands from the C2.
 upnpseudograph --preferred-device=upnpseudograph.upnp.RokuDevice
 ```
 
+### Interacting with Agent
+
+After a device is cloned you will receive a prompt to interact with other agents:
+
+```bash
+Control Panel:
+    m:[MESSAGE] - Send a message
+    f:[FILE_PATH] - Send file
+    g:[FILE_PATH] - Gets a file from an agent (c2 only)
+    c:[COMMAND] - Execute a command (c2 only)
+    l - List agents
+    q - quit
+            
+Enter command:m:hello
+0 192.168.1.42
+Select agent to send to or type c to cancel:0
+Message queued for 192.168.1.42
+```
+
 ### Other Arguments
 
 There are other arguments you can pass in depending on preference:
@@ -71,6 +92,6 @@ There are other arguments you can pass in depending on preference:
 
 # References
 
-https://quimby.gnus.org/internet-drafts/draft-cai-ssdp-v1-03.txt
-https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf
-https://github.com/MoshiBin/ssdpy
+[1] Contributing Members of the UPnP Forum, “UPnPTM Device Architecture 1.1,” 2008. Available: https://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf. [Accessed: Jul. 23, 2024]
+
+[2] x011, “x011/SecretPixel,” GitHub, Mar. 29, 2024. Available: https://github.com/x011/SecretPixel. [Accessed: Jul. 22, 2024]
