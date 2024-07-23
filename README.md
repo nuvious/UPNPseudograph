@@ -6,6 +6,8 @@ A detailed overview is available in a whitepapaer in [markdown](Whitepaper.md) a
 
 [![UPNPseudograph](https://img.youtube.com/vi/BKqg3oSyqzU/0.jpg)](https://www.youtube.com/watch?v=BKqg3oSyqzU)
 
+A detailed overview is available in a whitepapaer in [markdown](Whitepaper.md) and [pdf](Whitepaper.pdf) formats.
+
 ## Dependencies
 
 Clone the repository:
@@ -94,6 +96,6 @@ There are other arguments you can pass in depending on preference:
 
 # References
 
-https://quimby.gnus.org/internet-drafts/draft-cai-ssdp-v1-03.txt
-https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf
-https://github.com/MoshiBin/ssdpy
+[1] Contributing Members of the UPnP Forum, “UPnPTM Device Architecture 1.1,” 2008. Available: https://upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.1.pdf. [Accessed: Jul. 23, 2024]
+
+[2] x011, “x011/SecretPixel,” GitHub, Mar. 29, 2024. Available: https://github.com/x011/SecretPixel. [Accessed: Jul. 22, 2024]

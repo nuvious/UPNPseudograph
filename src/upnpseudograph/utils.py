@@ -43,7 +43,6 @@ def _benchmark_icon(public_key: rsa.RSAPublicKey, icon: typing.Dict):
     int
         The number of bytes that can be encoded in the image
     """
-    gen_byte_string = lambda x : os.urandom(x) # pylint: disable=W0108,C3001
     icon_bytes = icon.get('content')
     if not icon_bytes:
         return 0
@@ -97,6 +96,7 @@ def benchmark_icons(public_key: rsa.RSAPublicKey, icons: typing.Dict):
         capacity = _benchmark_icon(public_key, icon)
         icon['_capacity'] = capacity
         benchmarked_icons[icon_path] = icon
+        print(f"Capacity of icon {icon_path} is {capacity}.")
     return benchmarked_icons
 
 
