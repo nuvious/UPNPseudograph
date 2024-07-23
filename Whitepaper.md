@@ -14,7 +14,7 @@ UPNP covert channels have been researched in the past. Mohamed et al. implemente
 
 # Overview
 
-UPNP devices usually service requests using HTTP or Websockets. When devices are looking for Universal Plug and Play (UPNP) devices, they use SSDP broadcast messages to request information about devices and/or services. Specifically, a M-SEARCH request with `ssdp:all` or `upnp:rootdevice` is specified in the `MAN` field is broadcast with UDP to `239.255.255.250` on port `1900`. An `MX` value is specified in discover requests to specify the number of seconds devices have to respond. Devices then respond directly to the requestor with a Simple Service Discovery Protocol (SSDP) message providing various information. All requests and responses are formatted with HTTP/1.1 [1] [6]. Below is an example of one such response from a Roku device:
+UPNP devices usually service requests using HTTP or Websockets. When devices are looking for Universal Plug and Play (UPNP) devices, they use SSDP broadcast messages to request information about devices and/or services. Specifically, a M-SEARCH request with `ssdp:all`, `upnp:rootdevice`, or other service requests is specified in the `ST` field is broadcast with UDP to `239.255.255.250` on port `1900`. An `MX` value is specified in discover requests to specify the number of seconds devices have to respond. Devices then respond directly to the requestor with a Simple Service Discovery Protocol (SSDP) message providing various information. All requests and responses are formatted with HTTP/1.1 [1] [6]. Below is an example of one such response from a Roku device:
 
 ![SSDP Packet Capture](assets/fig1.png "SSDP Packet Capture")
 
@@ -25,7 +25,7 @@ M-SEARCH * HTTP/1.1
 HOST: 239.255.255.250:1900
 MAN: "ssdp:discover"
 MX: 1
-ST: ST: urn:dial-multiscreen-org:service:dial:1
+ST: urn:dial-multiscreen-org:service:dial:1
 USER-AGENT: Chromium/125.0.6422.112 Windows
 ```
 
