@@ -62,13 +62,14 @@ Control Panel:
                 agent_ip = None
                 while not agent_ip:
                     try:
-                        agent_index = int(input("Select agent to send to or type c to cancel:"))
-                        if agent_index == 'c':
+                        index_input = input("Select agent to send to or type c to cancel:")
+                        if index_input == 'c':
                             break
-                        elif agent_index < len(spoofed_device.agents):
+                        agent_index = int(index_input)
+                        if agent_index < len(spoofed_device.agents):
                             agent_ip = list(spoofed_device.agents.keys())[agent_index]
                     except:
-                        raise
+                        pass
                 if agent_ip:
                     command = command_input[0].encode('utf8')
                     content = command_input[2:].encode('utf8')
